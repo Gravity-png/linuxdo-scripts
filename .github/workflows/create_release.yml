@@ -7,58 +7,72 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-release:
+  check-and-release:
     runs-on: ubuntu-latest
+    # 关键修正(1): 添加创建 Release 所需的权限
+    permissions:
+      contents: write
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '22'
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Get package.json version
-      id: get_version
-      run: echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+      - name: Check version and determine if release is needed
+        id: check_version
+        # 优化点(2): 将版本获取和比较合并为一步，逻辑更清晰
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          echo "package_version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
+          
+          # 使用 gh cli 获取最新的 release 标签，比 curl 更稳定
+          LATEST_TAG=$(gh release list --limit 1 --json tagName --jq '.[0].tagName' || echo "")
+          
+          echo "Version in package.json: $PACKAGE_VERSION"
+          echo "Latest release tag: $LATEST_TAG"
+          
+          # 比较版本号 (同时兼容带'v'和不带'v'的标签)
+          if [[ "v$PACKAGE_VERSION" == "$LATEST_TAG" || "$PACKAGE_VERSION" == "$LATEST_TAG" ]]; then
+            echo "Versions match. No new release needed."
+            echo "create_release=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Version mismatch. A new release will be created."
+            echo "create_release=true" >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          # 'gh release list' 命令需要 token 认证
+          GH_TOKEN: ${{ github.token }}
 
-    - name: Get latest release version
-      id: get_release
-      run: |
-        curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r '.tag_name' > latest_release.txt
-
-    - name: Compare versions
-      id: compare_versions
-      run: |
-        if [ "$(cat latest_release.txt)" != "$PACKAGE_VERSION" ]; then
-          echo "Version mismatch"
-          echo "create_release=true" >> $GITHUB_ENV
-        else
-          echo "Version matches"
-          echo "create_release=false" >> $GITHUB_ENV
-        fi
-
-    - name: Create new release
-      if: env.create_release == 'true'
-      run: |
-        CURRENT_DATE=$(TZ='Asia/Shanghai' date +'%Y-%m-%d  %H:%M')
-        sed -i "s/\$PACKAGE_VERSION/$PACKAGE_VERSION/g" CHANGELOG.md
-        sed -i "s/\$CURRENT_DATE/$CURRENT_DATE/g" CHANGELOG.md
-        gh release create "$PACKAGE_VERSION" \
-        --generate-notes \
-        -t "$PACKAGE_VERSION" \
-        -n "$(cat CHANGELOG.md)
-
-        ---
-
-        使用方法:  
-        - **Chrome / Edge / Arc / Brave:** [Chrome Web Store](https://chromewebstore.google.com/detail/fbgblmjbeebanackldpbmpacppflgmlj)
-        - **国内用户:** [Crx 商店](https://www.crxsoso.com/webstore/detail/fbgblmjbeebanackldpbmpacppflgmlj)
-        - **Firefox:** [Firefox Addons](https://addons.mozilla.org/zh-CN/firefox/addon/linux_do-scripts/)
-        
-        发布于：$CURRENT_DATE"
-      env:
-        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      - name: Create new release
+        if: steps.check_version.outputs.create_release == 'true'
+        run: |
+          PACKAGE_VERSION=${{ steps.check_version.outputs.package_version }}
+          RELEASE_TAG="v$PACKAGE_VERSION"
+          CURRENT_DATE=$(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M')
+          
+          # 关键修正(3): 将多行的 notes 内容先写入文件，这是处理复杂文本最安全的方式
+          cat <<EOF > release_notes.md
+          使用方法:  
+          - **Chrome / Edge / Arc / Brave:** [Chrome Web Store](https://chromewebstore.google.com/detail/fbgblmjbeebanackldpbmpacppflgmlj)
+          - **国内用户:** [Crx 商店](https://www.crxsoso.com/webstore/detail/fbgblmjbeebanackldpbmpacppflgmlj)
+          - **Firefox:** [Firefox Addons](https://addons.mozilla.org/zh-CN/firefox/addon/linux_do-scripts/)
+          
+          ---
+          发布于：$CURRENT_DATE
+          EOF
+          
+          # 使用 --notes-file 从文件加载自定义说明
+          # --generate-notes 会自动根据 commit 生成更新日志
+          gh release create "$RELEASE_TAG" \
+            --title "$RELEASE_TAG" \
+            --generate-notes \
+            --notes-file release_notes.md
+        env:
+          # 关键修正(4): 使用 GitHub Actions 自动提供的 GITHUB_TOKEN，更安全标准
+          GH_TOKEN: ${{ github.token }}
