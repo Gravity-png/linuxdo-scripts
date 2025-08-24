@@ -1,5 +1,3 @@
-- fix: 修复因免打扰按钮导致的通知面板误触问题 #155 #224
-- fix: correct correct muted post page detection in multiple components #223
-- fix: 优化 AI 生成标题功能，兼容论坛新编辑器 #222
-
-欢迎新贡献者 @qixing-jk
+- style: 修复管理权限用户头像光圈在简洁模式下的冲突
+- feat: 支持弹窗/侧边双重切换，暂不可同时存在
+- feat: 支持在弹窗/侧边快速查看收藏夹

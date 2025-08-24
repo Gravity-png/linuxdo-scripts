@@ -17,7 +17,7 @@
   <h1>LinuxDo Scripts</h1>
 
   <p>
-    <a href="https://discord.gg/n2pErsD7Kg">Discord</a>
+    <a href="https://discord.gg/3wDmhCsVeU">Discord</a>
     ·
     <a href="https://linuxdo-scripts.zishu.me">Documentation</a>
     ·
@@ -62,11 +62,11 @@ Forum Discussion Thread: [linuxdo enhanced plugin, continuously updated, feedbac
 
 ### 1. Supported Browsers
 
-| Browser                          | Installation Link                                                                                     | Notes     |
-| -------------------------------- | --------------------------------------------------------------------------------------------- | -------- |
-| **Chrome / Edge / Arc / Brave** | [Chrome Web Store](https://chromewebstore.google.com/detail/fbgblmjbeebanackldpbmpacppflgmlj) | Recommended     |
-| **Firefox**                     | [Firefox Addons](https://addons.mozilla.org/zh-CN/firefox/addon/linux_do-scripts/)            | Full Support |
-| **Domestic Users**                    | [Crx Store](https://www.crxsoso.com/webstore/detail/fbgblmjbeebanackldpbmpacppflgmlj)          | No VPN Needed |
+| Browser                         | Installation Link                                                                             | Notes         |
+| ------------------------------- | --------------------------------------------------------------------------------------------- | ------------- |
+| **Chrome / Edge / Arc / Brave** | [Chrome Web Store](https://chromewebstore.google.com/detail/fbgblmjbeebanackldpbmpacppflgmlj) | Recommended   |
+| **Firefox**                     | [Firefox Addons](https://addons.mozilla.org/zh-CN/firefox/addon/linux_do-scripts/)            | Full Support  |
+| **Domestic Users**              | [Crx Store](https://www.crxsoso.com/webstore/detail/fbgblmjbeebanackldpbmpacppflgmlj)         | No VPN Needed |
 
 ### 2. Installation Steps
 1. Click the installation link for your browser above.
@@ -185,7 +185,7 @@ npm run dev
 - 🐛 [Report a Bug](https://github.com/anghunk/linuxdo-scripts/issues/new?template=bug_report.yml)
 - 💡 [Suggest a Feature](https://github.com/anghunk/linuxdo-scripts/issues/new?template=feature_report.yml)
 - 🔧 [Submit Code](https://github.com/anghunk/linuxdo-scripts/pulls)
-- 🙍‍♂️ [Join the Discussion](https://discord.gg/n2pErsD7Kg)
+- 🙍‍♂️ [Join the Discussion](https://discord.gg/3wDmhCsVeU)
 
 ### 2. Contributors
 ![Contributors](https://contrib.rocks/image?repo=anghunk/linuxdo-scripts)
@@ -218,13 +218,13 @@ This project is licensed under the [Apache License 2.0](https://github.com/anghu
 - This project is **free and open-source**. It does not guarantee absolute perfection or error-freeness.
 - Please assess risks yourself before use and comply with relevant laws and regulations.
 - Any form of misuse is strictly prohibited.
-- For any infringement issues, please contact [anghunk](https://github.com/anghunk) for prompt resolution.
+- For any infringement issues, please contact [@anghunk](https://github.com/anghunk) for prompt resolution.
 
 ---
 
-![](https://invidget.wdh.app/n2pErsD7Kg)
+![](https://invidget.wdh.app/3wDmhCsVeU)
 
 <div align="center">
   <p>If this project has been helpful to you, please consider giving us a ⭐ Star!</p>
-  <p>Made with ❤️ by <a href="https://github.com/anghunk">anghunk</a> and <a href="https://github.com/anghunk/linuxdo-scripts/graphs/contributors">contributors</a></p>
+  <p>Made with ❤️ by <a href="https://github.com/anghunk">@anghunk</a> and <a href="https://github.com/anghunk/linuxdo-scripts/graphs/contributors">contributors</a></p>
 </div>
